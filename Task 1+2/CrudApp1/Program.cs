@@ -6,41 +6,44 @@ namespace CrudApp1
 {
     internal class Program
     {
-        private const string connectionString =
+        private const string ConnectionString =
             "Host=ep-broad-disk-66916092.us-east-2.aws.neon.tech;Username=dimamatveevdenismatveev;Password=5VnTI3eWMZRQ;Database=neondb";
 
         private static void Main(string[] args)
         {
-            var artistsRepo = new ArtistsRepository(connectionString);
-            var albumsRepo = new AlbumsRepository(connectionString);
+            var artistsRepo = new ArtistsRepository(ConnectionString);
+            var albumsRepo = new AlbumsRepository(ConnectionString);
 
             while (true)
             {
                 Console.WriteLine("1 - Create, 2 - Read, 3 - Update, 4 - Delete");
-                var user_command = Convert.ToInt32(Console.ReadLine());
-                switch (user_command)
+                var userCommand = Convert.ToInt32(Console.ReadLine());
+                switch (userCommand)
                 {
                     case 1: //Create
                         Console.WriteLine("You choose Create operation");
                         var create_table = GetTableChoice();
-                        if (create_table.ToLower() == "artists")
+                        switch (create_table.ToLower())
                         {
-                            Console.WriteLine("type the artist name");
-                            artistsRepo.Insert(new Artist { artist_name = Console.ReadLine() });
-                            Console.WriteLine("success");
-                        }
-                        else if (create_table.ToLower() == "albums")
-                        {
-                            Console.WriteLine("type the album name");
-                            var album_name = Console.ReadLine();
-                            Console.WriteLine("type the release year");
-                            var year = Convert.ToInt32(Console.ReadLine());
-                            Console.WriteLine("type the artist id");
-                            var artist_id = Convert.ToInt32(Console.ReadLine());
-                            //AddAlbum(album_name, year, artist_id);
-                            albumsRepo.Insert(new Album
-                                { album_name = album_name, year = year, artist_id = artist_id });
-                            Console.WriteLine("success");
+                            case "artists":
+                                Console.WriteLine("type the artist name");
+                                artistsRepo.Insert(new Artist { artist_name = Console.ReadLine() });
+                                Console.WriteLine("success");
+                                break;
+                            case "albums":
+                            {
+                                Console.WriteLine("type the album name");
+                                var album_name = Console.ReadLine();
+                                Console.WriteLine("type the release year");
+                                var year = Convert.ToInt32(Console.ReadLine());
+                                Console.WriteLine("type the artist id");
+                                var artist_id = Convert.ToInt32(Console.ReadLine());
+                                //AddAlbum(album_name, year, artist_id);
+                                albumsRepo.Insert(new Album
+                                    { album_name = album_name, year = year, artist_id = artist_id });
+                                Console.WriteLine("success");
+                                break;
+                            }
                         }
 
                         break;

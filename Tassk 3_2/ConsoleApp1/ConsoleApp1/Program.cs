@@ -61,7 +61,7 @@ namespace CrudApp1
                 }
             }*/
             
-            using (NeondbContext db = new NeondbContext()) //Delete
+            /*using (NeondbContext db = new NeondbContext()) //Delete
             {
                 var album = db.Albums.SingleOrDefault(a => a.AlbumName == "Eternal Atake");
                 if (album != null)
@@ -76,7 +76,7 @@ namespace CrudApp1
                 {
                     Console.WriteLine($"{a.Year}, {a.AlbumName}");
                 }
-            }
+            }*/
             
             
             string GetTableChoice()

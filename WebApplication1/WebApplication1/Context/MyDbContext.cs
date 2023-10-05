@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WebApplication1.Entities;
 
 namespace WebApplication1.Context;
@@ -21,8 +19,9 @@ public partial class MyDbContext : DbContext
     public virtual DbSet<Artist> Artists { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=ep-broad-disk-66916092.us-east-2.aws.neon.tech;Username=dimamatveevdenismatveev;Password=5VnTI3eWMZRQ;Database=neondb");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https: //go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseNpgsql(
+            "Host=ep-broad-disk-66916092.us-east-2.aws.neon.tech;Username=dimamatveevdenismatveev;Password=5VnTI3eWMZRQ;Database=neondb");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

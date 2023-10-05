@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace WebApplication1.Entities;
 
-namespace WebApplication1.Entities;
-
-public partial class Album
+public class Album
 {
     public string AlbumName { get; set; } = null!;
 

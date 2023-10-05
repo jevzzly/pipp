@@ -1,3 +1,3 @@
 ﻿namespace WebApplication1.DTO;
 
-public record AlbumlDto(string albumName, int Year);
+public record AlbumlDto(string albumName, int Year, string artist_name);

@@ -1,6 +1,6 @@
 using WebApplication1.Context;
-using WebApplication1.Entities;
 using WebApplication1.DTO;
+using WebApplication1.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,68 +22,61 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapGet("/albums", () =>
 {
-    using (MyDbContext db = new MyDbContext()) //Read
-    {
-        var albums = 
-            db.Albums.Select(x => new {x.Artist.ArtistName, x.AlbumName}).ToList();
-        return albums;
-    }
+    var db = new MyDbContext(); //Read
+
+    var albums =
+        db.Albums.Select(x => new { x.Artist.ArtistName, x.AlbumName }).ToList();
+    return albums;
 });
-    
+
 app.MapGet("/artists", () =>
-    {
-        using (MyDbContext db = new MyDbContext()) //Read
-        {
-            var artists = db.Artists.ToList();
-            return artists;
-        }
-    });
-app.MapDelete("/albums/delete/{id}", (string id) =>
 {
-    using (MyDbContext db = new MyDbContext()) //Delete
-    {
-        var albums = db.Albums;
-        Album? album = albums.FirstOrDefault(a => a.AlbumId == Convert.ToInt32(id));
-        if (album == null) return Results.NotFound(new { message = "album not found" });
-        albums.Remove(album);
-        return Results.Json(album);
-    }
+    var db = new MyDbContext(); //Read
+    var artists = db.Artists.ToList();
+    return artists;
 });
-app.MapPost("/albums/Post", (AlbumlDto album, string artistName) =>
+
+app.MapDelete("/albums/delete/{id}", (int id) =>
+{
+    var db = new MyDbContext(); //Delete
+    var albums = db.Albums;
+    var album = albums.FirstOrDefault(a => a.AlbumId == id);
+    if (album == null) return Results.NotFound(new { message = "album not found" });
+    albums.Remove(album);
+    return Results.Json(album);
+});
+app.MapPost("/albums/Post", (AlbumlDto album) =>
+{
+    var db = new MyDbContext(); //Post
+    var artist = db.Artists.SingleOrDefault(a => a.ArtistName == album.artist_name);
+    if (artist == null) return Results.NotFound(new { message = "No such artist" });
+    Album a = new Album
     {
-        using (MyDbContext db = new MyDbContext()) //Post
-        {
-            var artist = db.Artists.SingleOrDefault(a => a.ArtistName == artistName);
-            Album a = new Album
-            {
-                AlbumName = album.albumName,
-                Year = album.Year,
-            };
-            a.ArtistId = artist.ArtistId;
-            db.Albums.Add(a);
-            db.SaveChanges();
-        }
-    });
+        AlbumName = album.albumName,
+        Year = album.Year,
+        ArtistId = artist.ArtistId
+    };
+    db.Albums.Add(a);
+    db.SaveChanges();
+    return Results.Ok(album);
+});
 
-app.MapPut("/albums/Put", (string artistName, AlbumlDto albumData) => {
-        using (MyDbContext db = new MyDbContext())
-        {
-            // получаем альбом по id
-            var album = db.Albums.FirstOrDefault(a => a.AlbumName == albumData.albumName);
-            var artist = db.Artists.SingleOrDefault(a => a.ArtistName == artistName);
-            // если не найден, отправляем статусный код и сообщение об ошибке
-            if (album == null) return Results.NotFound(new { message = "Пользователь не найден" });
-            // если альбом найден, изменяем его данные и отправляем обратно клиенту
-            album.Year = albumData.Year;
-            album.AlbumName = albumData.albumName;
-            album.ArtistId = artist.ArtistId;
-            db.SaveChanges();
-            return Results.Ok(albumData.albumName);
+app.MapPut("/albums/Put", (AlbumlDto albumData) =>
+    {
+        var db = new MyDbContext();
 
-        }
+        var album = db.Albums.FirstOrDefault(a => a.AlbumName == albumData.albumName);
+        if (album == null) return Results.NotFound(new { message = "No such album" });
+
+        var artist = db.Artists.SingleOrDefault(a => a.ArtistName == albumData.artist_name);
+        if (artist == null) return Results.NotFound(new { message = "No such artist" });
+
+        album.Year = albumData.Year;
+        album.AlbumName = albumData.albumName;
+        album.ArtistId = artist.ArtistId;
+        db.SaveChanges();
+        return Results.Ok(albumData.albumName);
     })
-    .WithName("GetWeatherForecast")
     .WithOpenApi();
 
 app.Run();
-//TODO put + patch
